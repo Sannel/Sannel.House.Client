@@ -1,0 +1,73 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+- develop
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet restore'
+  inputs:
+    command: custom
+    projects: src/**/*.csproj
+    custom: restore
+    arguments: '--configfile .nuget/nuget.config'
+    feedsToUse: config
+    nugetConfigPath: .nuget/nuget.config
+    externalFeedCredentials: 'Sannel House MyGet'
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build Release'
+  inputs:
+    projects: src/**/*.csproj
+    arguments: '-c Release'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build Debug'
+  inputs:
+    projects: src/**/*.csproj
+    arguments: '-c Debug'
+  condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet publish'
+  inputs:
+    command: publish
+    publishWebProjects: false
+    projects: src/**/*.csproj
+    arguments: '-o $(Build.StagingDirectory)'
+    zipAfterPublish: false
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet test'
+  inputs:
+    projects: '**/*Tests.csproj'
+    command: test
+    arguments: '--collect "Code coverage"'
+    publishTestResults: true
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet pack Release'
+  inputs:
+    command: 'pack'
+    feedsToUse: 'select'
+    packagesToPack: 'src/**/*.csproj'
+    configuration: 'Release'
+    versioningScheme: 'off'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet pack Debug'
+  inputs:
+    command: 'pack'
+    feedsToUse: 'select'
+    packagesToPack: 'src/**/*.csproj'
+    configuration: 'Debug'
+    versioningScheme: 'off'
+  condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
+- task: PublishPipelineArtifact@0
+  displayName: 'Publish Pipeline Artifact'
+  inputs:
+    artifactName: 'packages-source'
+    targetPath: '$(Build.StagingDirectory)'
