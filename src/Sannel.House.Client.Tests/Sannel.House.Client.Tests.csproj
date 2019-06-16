@@ -11,7 +11,7 @@
     <PackageReference Include="Moq" Version="4.11.0" />
     <PackageReference Include="NetEscapades.Configuration.Yaml" Version="1.6.0" />
     <PackageReference Include="Sannel.House.Devices.Client" Version="0.5.226-beta" />
-    <PackageReference Include="Sannel.House.SensorLogging.Client" Version="0.5.227-beta" />
+    <PackageReference Include="Sannel.House.SensorLogging.Client" Version="0.5.230-beta" />
     <PackageReference Include="Sannel.House.Test" Version="0.5.184-beta" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">

@@ -20,7 +20,7 @@
   <ItemGroup>
     <PackageReference Include="Sannel.House.Client.Common" Version="0.5.225-beta" />
     <PackageReference Include="Sannel.House.Devices.Client" Version="0.5.226-beta" />
-    <PackageReference Include="Sannel.House.SensorLogging.Client" Version="0.5.227-beta" />
+    <PackageReference Include="Sannel.House.SensorLogging.Client" Version="0.5.230-beta" />
   </ItemGroup>
 
   <ItemGroup>
